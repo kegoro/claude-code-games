@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Prep</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --card: #22263a;
+    --border: #2e3248;
+    --accent: #4f8ef7;
+    --accent2: #34d399;
+    --accent3: #f59e0b;
+    --accent4: #f87171;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --radius: 12px;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--accent);
+    padding: 16px 0;
+    margin-right: 16px;
+    letter-spacing: 1px;
+  }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    padding: 16px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { color: var(--text); }
+  .nav-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* PAGES */
+  .page { display: none; padding: 32px 24px; max-width: 960px; margin: 0 auto; }
+  .page.active { display: block; }
+
+  h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+  h2 { font-size: 20px; font-weight: 600; margin-bottom: 16px; }
+  h3 { font-size: 16px; font-weight: 600; margin-bottom: 10px; }
+  .subtitle { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  @media (max-width: 600px) {
+    .grid-2 { grid-template-columns: 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* DASHBOARD SCORE CARDS */
+  .score-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .score-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .score-card .icon { font-size: 28px; margin-bottom: 8px; }
+  .score-card .label { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .score-card .band { font-size: 32px; font-weight: 700; }
+  .band-l { color: var(--accent); }
+  .band-r { color: var(--accent2); }
+  .band-w { color: var(--accent3); }
+  .band-s { color: var(--accent4); }
+
+  .overall-band {
+    background: linear-gradient(135deg, #1e2a4a, #1a2d3a);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .overall-band .big { font-size: 64px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .overall-band .caption { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+  /* BAND INPUT */
+  .band-input {
+    width: 60px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    padding: 4px;
+  }
+  .band-input:focus { outline: none; border-color: var(--accent); }
+
+  /* PROGRESS BAR */
+  .progress-bar {
+    background: var(--border);
+    border-radius: 99px;
+    height: 8px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 0.4s ease;
+  }
+
+  /* TAGS */
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 6px;
+    margin-bottom: 4px;
+  }
+  .tag-blue { background: #1e3a5f; color: var(--accent); }
+  .tag-green { background: #14352a; color: var(--accent2); }
+  .tag-yellow { background: #3b2c10; color: var(--accent3); }
+  .tag-red { background: #3b1414; color: var(--accent4); }
+
+  /* BUTTONS */
+  .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-success { background: var(--accent2); color: #0f1117; }
+  .btn-warning { background: var(--accent3); color: #0f1117; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* READING */
+  .passage-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    line-height: 1.8;
+    font-size: 15px;
+    max-height: 280px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    color: #c8d0e0;
+  }
+  .passage-box p { margin-bottom: 12px; }
+
+  .question-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .question-item p { margin-bottom: 10px; font-weight: 500; }
+  .options label {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.15s;
+    margin-bottom: 4px;
+    border: 1px solid transparent;
+  }
+  .options label:hover { background: var(--card); border-color: var(--border); }
+  .options input[type=radio] { margin-right: 8px; accent-color: var(--accent); }
+  .options label.correct { background: #14352a; border-color: var(--accent2); color: var(--accent2); }
+  .options label.wrong { background: #3b1414; border-color: var(--accent4); color: var(--accent4); }
+
+  .answer-key {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--accent2);
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+    font-size: 14px;
+  }
+  .answer-key.show { display: block; }
+
+  /* WRITING */
+  .task-prompt {
+    background: var(--surface);
+    border-left: 3px solid var(--accent3);
+    padding: 16px;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 16px;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #c8d0e0;
+  }
+  .writing-area {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 16px;
+    resize: vertical;
+    min-height: 200px;
+    font-family: inherit;
+  }
+  .writing-area:focus { outline: none; border-color: var(--accent); }
+  .word-count { font-size: 13px; color: var(--muted); margin-top: 6px; text-align: right; }
+  .word-count.ok { color: var(--accent2); }
+  .word-count.warn { color: var(--accent3); }
+
+  .band-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .band-cell {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .band-cell .score { font-size: 18px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+
+  /* SPEAKING */
+  .part-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .part-badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+  .topic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .topic-card:hover { border-color: var(--accent); }
+  .topic-card .topic-title { font-weight: 600; margin-bottom: 6px; }
+  .topic-card .cue-card {
+    display: none;
+    margin-top: 10px;
+    background: var(--card);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #c8d0e0;
+  }
+  .topic-card.open .cue-card { display: block; }
+  .cue-card ul { padding-left: 18px; margin-top: 6px; }
+  .cue-card li { margin-bottom: 3px; }
+
+  .tips-list { list-style: none; padding: 0; }
+  .tips-list li {
+    padding: 8px 0 8px 24px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    position: relative;
+    line-height: 1.6;
+  }
+  .tips-list li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+  .tips-list li:last-child { border-bottom: none; }
+
+  /* VOCABULARY */
+  .vocab-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .vtab {
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .vtab:hover { color: var(--text); }
+  .vtab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .vocab-section { display: none; }
+  .vocab-section.active { display: block; }
+
+  .word-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .word-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    transition: border-color 0.2s;
+  }
+  .word-card:hover { border-color: var(--accent); }
+  .word-card .word { font-weight: 700; font-size: 15px; margin-bottom: 3px; }
+  .word-card .pos { font-size: 11px; color: var(--accent); font-style: italic; margin-bottom: 4px; }
+  .word-card .def { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .word-card .example { font-size: 12px; color: #7a86a0; margin-top: 5px; font-style: italic; border-top: 1px solid var(--border); padding-top: 5px; }
+
+  /* GRAMMAR */
+  .error-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .error-card .wrong-eg {
+    background: #3b1414;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    margin: 8px 0 4px;
+    color: var(--accent4);
+  }
+  .error-card .right-eg {
+    background: #14352a;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: var(--accent2);
+  }
+  .error-card .explanation { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* TIMER */
+  .timer-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-bottom: 16px;
+  }
+  .timer-display { font-size: 22px; font-weight: 700; color: var(--accent3); font-variant-numeric: tabular-nums; }
+  .timer-display.urgent { color: var(--accent4); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+
+  /* CHECKLIST */
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item input[type=checkbox] { margin-top: 2px; accent-color: var(--accent2); width: 16px; height: 16px; flex-shrink: 0; }
+  .check-item.done label { text-decoration: line-through; color: var(--muted); }
+
+  /* SCORE TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; padding: 10px 12px; background: var(--surface); color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+  td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">IELTS</div>
+  <button class="nav-btn active" onclick="showPage('dashboard')">Dashboard</button>
+  <button class="nav-btn" onclick="showPage('reading')">Reading</button>
+  <button class="nav-btn" onclick="showPage('writing')">Writing</button>
+  <button class="nav-btn" onclick="showPage('speaking')">Speaking</button>
+  <button class="nav-btn" onclick="showPage('vocab')">Vocabulary</button>
+  <button class="nav-btn" onclick="showPage('grammar')">Grammar</button>
+</nav>
+
+<!-- ===================== DASHBOARD ===================== -->
+<div id="page-dashboard" class="page active">
+  <h1>Your IELTS Dashboard</h1>
+  <p class="subtitle">Track your target band scores and study progress.</p>
+
+  <div class="overall-band">
+    <div style="color:var(--muted);font-size:13px;margin-bottom:4px;">OVERALL BAND TARGET</div>
+    <div class="big" id="overall-display">7.0</div>
+    <div class="caption">Average of all four skills (rounded to nearest 0.5)</div>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:24px;">
+    <div class="score-card" onclick="showPage('reading')">
+      <div class="icon">📖</div>
+      <div class="label">Reading</div>
+      <div class="band band-r"><input class="band-input" id="band-r" type="number" min="1" max="9" step="0.5" value="7.0" oninput="updateOverall()"></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;">60 min · 40 Q</div>
+    </div>
+    <div class="score-card" onclick="showPage('writing')">
+      <div class="icon">✍️</div>
+      <div class="label">Writing</div>
+      <div class="band band-w"><input class="band-input" id="band-w" type="number" min="1" max="9" step="0.5" value="7.0" oninput="updateOverall()"></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;">60 min · 2 tasks</div>
+    </div>
+    <div class="score-card" onclick="showPage('speaking')">
+      <div class="icon">🎙️</div>
+      <div class="label">Speaking</div>
+      <div class="band band-s"><input class="band-input" id="band-s" type="number" min="1" max="9" step="0.5" value="6.5" oninput="updateOverall()"></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;">11–14 min · 3 parts</div>
+    </div>
+    <div class="score-card">
+      <div class="icon">🎧</div>
+      <div class="label">Listening</div>
+      <div class="band band-l"><input class="band-input" id="band-l" type="number" min="1" max="9" step="0.5" value="7.5" oninput="updateOverall()"></div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;">30 min · 40 Q</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h3>Study Checklist</h3>
+      <div id="checklist">
+        <div class="check-item" id="ci-1"><input type="checkbox" id="c1" onchange="saveChecks()"><label for="c1">Complete 1 full Reading practice test</label></div>
+        <div class="check-item" id="ci-2"><input type="checkbox" id="c2" onchange="saveChecks()"><label for="c2">Write a Task 2 essay (250+ words)</label></div>
+        <div class="check-item" id="ci-3"><input type="checkbox" id="c3" onchange="saveChecks()"><label for="c3">Record yourself answering Speaking Part 2</label></div>
+        <div class="check-item" id="ci-4"><input type="checkbox" id="c4" onchange="saveChecks()"><label for="c4">Learn 20 new academic vocabulary words</label></div>
+        <div class="check-item" id="ci-5"><input type="checkbox" id="c5" onchange="saveChecks()"><label for="c5">Review 3 common grammar mistakes</label></div>
+        <div class="check-item" id="ci-6"><input type="checkbox" id="c6" onchange="saveChecks()"><label for="c6">Time yourself on a Writing Task 1 (20 min)</label></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>IELTS Band Score Guide</h3>
+      <table>
+        <tr><th>Band</th><th>Level</th><th>Typical Use</th></tr>
+        <tr><td style="color:var(--accent4)">5.0–5.5</td><td>Modest</td><td>Foundation courses</td></tr>
+        <tr><td style="color:var(--accent3)">6.0–6.5</td><td>Competent</td><td>Undergraduate entry</td></tr>
+        <tr><td style="color:var(--accent2)">7.0–7.5</td><td>Good</td><td>Postgraduate, professional</td></tr>
+        <tr><td style="color:var(--accent)">8.0–9.0</td><td>Expert</td><td>Academic/medical/legal</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:0;">
+    <h3>Score Conversion — Reading &amp; Listening (approximate)</h3>
+    <table>
+      <tr><th>Correct Answers</th><th>1–15</th><th>16–22</th><th>23–28</th><th>29–32</th><th>33–36</th><th>37–38</th><th>39–40</th></tr>
+      <tr><td>Band Score</td><td style="color:var(--accent4)">4.0–5.0</td><td style="color:var(--accent4)">5.5</td><td style="color:var(--accent3)">6.0–6.5</td><td style="color:var(--accent3)">7.0</td><td style="color:var(--accent2)">7.5–8.0</td><td style="color:var(--accent)">8.5</td><td style="color:var(--accent)">9.0</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ===================== READING ===================== -->
+<div id="page-reading" class="page">
+  <h1>Reading Practice</h1>
+  <p class="subtitle">Academic passage · ~13 minutes · 10 questions</p>
+
+  <div class="timer-bar">
+    <span style="font-size:14px;color:var(--muted);">Timer:</span>
+    <span class="timer-display" id="read-timer">13:00</span>
+    <button class="btn btn-primary" style="padding:6px 14px;font-size:13px;" onclick="startTimer('read-timer',780)">Start</button>
+    <button class="btn btn-outline" style="padding:6px 14px;font-size:13px;" onclick="resetTimer('read-timer',780)">Reset</button>
+  </div>
+
+  <div class="card">
+    <h3>Passage: The Science of Sleep</h3>
+    <div class="passage-box">
+      <p><strong>A</strong> Sleep is one of the most fundamental biological processes, yet it remains one of the least understood. Scientists have long debated why humans and animals need to sleep at all, given that it renders them vulnerable and temporarily halts productive activity. Recent research, however, suggests that sleep serves multiple critical functions — from memory consolidation to cellular repair — that cannot be performed while awake.</p>
+      <p><strong>B</strong> The human sleep cycle consists of several distinct stages, broadly classified into REM (rapid eye movement) and non-REM sleep. Non-REM sleep progresses through three stages of increasing depth. In the deepest stage, known as slow-wave sleep, the brain emits large, synchronised electrical waves, the heart rate slows, and the body undertakes much of its physical restoration. REM sleep, by contrast, is characterised by brain activity resembling wakefulness, paralysis of most voluntary muscles, and vivid dreaming. A full cycle lasts approximately 90 minutes, and healthy adults complete four to six cycles per night.</p>
+      <p><strong>C</strong> One prevailing theory, the synaptic homeostasis hypothesis, proposes that wakefulness causes a net increase in synaptic strength across the brain. As we learn and experience new things, synaptic connections are reinforced. Sleep, according to this view, serves to scale back these connections to a sustainable baseline — a process of "pruning" that prevents the brain from becoming saturated. This explains why students who sleep after studying consistently outperform those who remain awake, a finding replicated across dozens of studies.</p>
+      <p><strong>D</strong> Beyond cognition, sleep is essential for immune function. During slow-wave sleep, the body releases cytokines — proteins that help fight infection and inflammation. Chronic sleep deprivation has been linked to increased susceptibility to the common cold, accelerated progression of certain cancers, and elevated levels of inflammatory markers associated with cardiovascular disease. A landmark study by researchers at the University of California found that subjects who slept fewer than six hours per night were four times more likely to catch a cold when exposed to a rhinovirus than those who slept eight hours or more.</p>
+      <p><strong>E</strong> Despite this evidence, modern society systematically undervalues sleep. The widespread glorification of overwork, artificial light exposure delaying melatonin release, and the ubiquity of screens in bedrooms have collectively contributed to what sleep researchers call a "global sleep crisis." The World Health Organisation has described insufficient sleep as an epidemic across industrialised nations. The economic cost is equally stark: the RAND Corporation estimated that the United States loses approximately $411 billion annually in productivity due to sleep deprivation, arising from absenteeism, accidents, and reduced cognitive output.</p>
+    </div>
+
+    <h3 style="margin-bottom:14px;">Questions 1–10</h3>
+
+    <div id="reading-questions"></div>
+
+    <div style="display:flex;gap:10px;margin-top:16px;">
+      <button class="btn btn-success" onclick="checkReading()">Check Answers</button>
+      <button class="btn btn-outline" onclick="resetReading()">Reset</button>
+    </div>
+
+    <div class="answer-key" id="answer-key">
+      <strong style="color:var(--accent2);">Answer Key:</strong>
+      <div id="answer-key-content" style="margin-top:10px;font-size:14px;line-height:2;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== WRITING ===================== -->
+<div id="page-writing" class="page">
+  <h1>Writing Practice</h1>
+  <p class="subtitle">Task 1 (20 min · 150 words min) &nbsp;·&nbsp; Task 2 (40 min · 250 words min)</p>
+
+  <div style="display:flex;gap:10px;margin-bottom:20px;">
+    <button class="btn btn-warning" onclick="showWritingTask(1)" id="wbtn1">Task 1</button>
+    <button class="btn btn-outline" onclick="showWritingTask(2)" id="wbtn2">Task 2</button>
+  </div>
+
+  <!-- TASK 1 -->
+  <div id="writing-task1">
+    <div class="card">
+      <h3>Task 1 — Academic</h3>
+      <div class="timer-bar" style="margin-bottom:12px;">
+        <span style="font-size:14px;color:var(--muted);">Timer:</span>
+        <span class="timer-display" id="w1-timer">20:00</span>
+        <button class="btn btn-warning" style="padding:6px 14px;font-size:13px;" onclick="startTimer('w1-timer',1200)">Start</button>
+        <button class="btn btn-outline" style="padding:6px 14px;font-size:13px;" onclick="resetTimer('w1-timer',1200)">Reset</button>
+      </div>
+      <div class="task-prompt" id="task1-prompt"></div>
+      <div style="text-align:right;margin-bottom:8px;">
+        <button class="btn btn-outline" style="padding:4px 12px;font-size:12px;" onclick="newTask1Prompt()">New Prompt</button>
+      </div>
+      <textarea class="writing-area" id="task1-text" placeholder="Write your Task 1 response here..." oninput="countWords('task1-text','wc1',150)"></textarea>
+      <div class="word-count" id="wc1">0 / 150 words minimum</div>
+    </div>
+
+    <div class="card">
+      <h3>Task 1 Band Descriptors</h3>
+      <div class="band-grid">
+        <div class="band-cell"><div class="score">5</div><strong>Task Achievement:</strong> Covers main features but may be inaccurate or unclear. Limited overview.</div>
+        <div class="band-cell"><div class="score">6</div><strong>Task Achievement:</strong> Addresses task adequately. Overview present but not fully developed. Key features covered.</div>
+        <div class="band-cell" style="border-color:var(--accent2)"><div class="score" style="color:var(--accent2)">7</div><strong>Task Achievement:</strong> Clear overview. Main trends identified. Minor inaccuracies. Data clearly selected.</div>
+        <div class="band-cell" style="border-color:var(--accent)"><div class="score">8</div><strong>Task Achievement:</strong> Fully addresses all requirements. Well-developed overview. Relevant data accurately selected and highlighted.</div>
+      </div>
+      <hr>
+      <h3 style="margin-top:4px;">Task 1 Formula</h3>
+      <ul class="tips-list">
+        <li><strong>Para 1 — Paraphrase</strong> the question in your own words (1–2 sentences)</li>
+        <li><strong>Para 2 — Overview</strong> of the most striking trends/features (no data, just the big picture)</li>
+        <li><strong>Para 3 — Detail 1</strong> with specific figures, comparisons, and trends</li>
+        <li><strong>Para 4 — Detail 2</strong> with remaining key data points</li>
+        <li>Use precise language: <em>rose sharply, declined gradually, remained relatively stable, peaked at, accounted for</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TASK 2 -->
+  <div id="writing-task2" style="display:none;">
+    <div class="card">
+      <h3>Task 2 — Essay</h3>
+      <div class="timer-bar" style="margin-bottom:12px;">
+        <span style="font-size:14px;color:var(--muted);">Timer:</span>
+        <span class="timer-display" id="w2-timer">40:00</span>
+        <button class="btn btn-primary" style="padding:6px 14px;font-size:13px;" onclick="startTimer('w2-timer',2400)">Start</button>
+        <button class="btn btn-outline" style="padding:6px 14px;font-size:13px;" onclick="resetTimer('w2-timer',2400)">Reset</button>
+      </div>
+      <div class="task-prompt" id="task2-prompt"></div>
+      <div style="text-align:right;margin-bottom:8px;">
+        <button class="btn btn-outline" style="padding:4px 12px;font-size:12px;" onclick="newTask2Prompt()">New Prompt</button>
+      </div>
+      <textarea class="writing-area" id="task2-text" placeholder="Write your Task 2 essay here..." style="min-height:280px;" oninput="countWords('task2-text','wc2',250)"></textarea>
+      <div class="word-count" id="wc2">0 / 250 words minimum</div>
+    </div>
+
+    <div class="card">
+      <h3>Task 2 Band Descriptors</h3>
+      <div class="band-grid">
+        <div class="band-cell"><div class="score">5</div>Position is unclear. Ideas are limited or underdeveloped. Weak cohesion. Limited vocabulary range.</div>
+        <div class="band-cell"><div class="score">6</div>Relevant position. Some ideas developed. Coherence is generally maintained. Adequate vocabulary.</div>
+        <div class="band-cell" style="border-color:var(--accent2)"><div class="score" style="color:var(--accent2)">7</div>Clear position throughout. Main ideas extended and supported. Logical paragraphing. Varied vocabulary with some errors.</div>
+        <div class="band-cell" style="border-color:var(--accent)"><div class="score">8</div>Fully developed argument. Well-supported ideas. Sophisticated cohesion. Wide, precise vocabulary. Rare grammatical errors.</div>
+      </div>
+      <hr>
+      <h3 style="margin-top:4px;">Task 2 Essay Structure (Opinion)</h3>
+      <ul class="tips-list">
+        <li><strong>Intro (50–70 words):</strong> Paraphrase topic → state your position clearly</li>
+        <li><strong>Body 1 (90–110 words):</strong> First main argument → explain → example/evidence</li>
+        <li><strong>Body 2 (90–110 words):</strong> Second argument or counter-argument + rebuttal</li>
+        <li><strong>Conclusion (40–60 words):</strong> Restate position → summarise key points (no new ideas)</li>
+        <li>Aim for exactly 270–290 words to leave time for review</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SPEAKING ===================== -->
+<div id="page-speaking" class="page">
+  <h1>Speaking Practice</h1>
+  <p class="subtitle">11–14 minutes · 3 parts · Examiner-assessed live</p>
+
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <div class="part-header">
+          <span class="part-badge">Part 1</span>
+          <h3 style="margin:0;">Introduction &amp; Interview (4–5 min)</h3>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Familiar topics — home, family, work, hobbies. Give extended answers (2–3 sentences).</p>
+        <div id="part1-topics"></div>
+      </div>
+
+      <div class="card">
+        <div class="part-header">
+          <span class="part-badge" style="background:var(--accent3);color:#000">Part 3</span>
+          <h3 style="margin:0;">Discussion (4–5 min)</h3>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">Abstract questions linked to Part 2 topic. Show depth of thought.</p>
+        <div id="part3-topics"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="part-header">
+          <span class="part-badge" style="background:var(--accent2);color:#000">Part 2</span>
+          <h3 style="margin:0;">Cue Card (3–4 min)</h3>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">1 min to prepare, 2 min to speak. Use the cue card bullet points.</p>
+        <div id="part2-topics"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Speaking Assessment Criteria (equally weighted)</h3>
+    <table>
+      <tr><th>Criterion</th><th>What examiners look for</th><th>Tips</th></tr>
+      <tr><td><span class="tag tag-blue">Fluency &amp; Coherence</span></td><td>Speaks without long pauses; ideas flow logically</td><td>Use discourse markers: <em>Well, Actually, What I mean is, That said</em></td></tr>
+      <tr><td><span class="tag tag-green">Lexical Resource</span></td><td>Range and accuracy of vocabulary; avoids repetition</td><td>Learn collocations, not just single words</td></tr>
+      <tr><td><span class="tag tag-yellow">Grammatical Range</span></td><td>Uses complex structures; errors don't impede understanding</td><td>Mix tenses; use conditionals, passives, relative clauses</td></tr>
+      <tr><td><span class="tag tag-red">Pronunciation</span></td><td>Clear enough to understand; uses stress and intonation</td><td>Focus on word stress, not accent</td></tr>
+    </table>
+
+    <hr>
+    <h3>Top Tips</h3>
+    <ul class="tips-list">
+      <li>Never answer Part 1 questions with just "Yes" or "No" — always add a reason or example</li>
+      <li>In Part 2, structure: describe the topic → explain when/where → say how you felt → why it was memorable</li>
+      <li>In Part 3, use phrases like <em>"From my perspective…", "It's a complex issue, but…", "In contrast to…"</em></li>
+      <li>Hesitation phrases: <em>"That's an interesting question…", "Let me think about that for a moment…"</em></li>
+      <li>Record yourself — most learners are surprised by their actual fluency vs. perceived fluency</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===================== VOCABULARY ===================== -->
+<div id="page-vocab" class="page">
+  <h1>Academic Vocabulary</h1>
+  <p class="subtitle">High-frequency words for IELTS Academic. Click a topic to explore.</p>
+
+  <div class="vocab-tabs" id="vocab-tabs"></div>
+  <div id="vocab-content"></div>
+</div>
+
+<!-- ===================== GRAMMAR ===================== -->
+<div id="page-grammar" class="page">
+  <h1>Common Grammar Mistakes</h1>
+  <p class="subtitle">Errors that cost IELTS test-takers band points — and how to fix them.</p>
+
+  <div id="grammar-content"></div>
+</div>
+
+<script>
+// ─── NAV ──────────────────────────────────────────────────────────────────────
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  const pages = ['dashboard','reading','writing','speaking','vocab','grammar'];
+  btns[pages.indexOf(id)].classList.add('active');
+}
+
+// ─── DASHBOARD ────────────────────────────────────────────────────────────────
+function updateOverall() {
+  const ids = ['band-r','band-w','band-s','band-l'];
+  const vals = ids.map(id => parseFloat(document.getElementById(id).value) || 0);
+  const avg = vals.reduce((a,b) => a+b, 0) / 4;
+  const rounded = Math.round(avg * 2) / 2;
+  document.getElementById('overall-display').textContent = rounded.toFixed(1);
+  saveBands();
+}
+
+function saveBands() {
+  ['band-r','band-w','band-s','band-l'].forEach(id => {
+    localStorage.setItem(id, document.getElementById(id).value);
+  });
+}
+
+function loadBands() {
+  ['band-r','band-w','band-s','band-l'].forEach(id => {
+    const v = localStorage.getItem(id);
+    if (v) document.getElementById(id).value = v;
+  });
+  updateOverall();
+}
+
+function saveChecks() {
+  for (let i = 1; i <= 6; i++) {
+    const el = document.getElementById('c' + i);
+    localStorage.setItem('check' + i, el.checked);
+    document.getElementById('ci-' + i).classList.toggle('done', el.checked);
+  }
+}
+
+function loadChecks() {
+  for (let i = 1; i <= 6; i++) {
+    const v = localStorage.getItem('check' + i) === 'true';
+    document.getElementById('c' + i).checked = v;
+    document.getElementById('ci-' + i).classList.toggle('done', v);
+  }
+}
+
+// ─── TIMER ────────────────────────────────────────────────────────────────────
+const timers = {};
+
+function startTimer(id, total) {
+  if (timers[id]) return;
+  let remaining = parseInt(document.getElementById(id).dataset.remaining || total);
+  timers[id] = setInterval(() => {
+    remaining--;
+    document.getElementById(id).dataset.remaining = remaining;
+    const m = Math.floor(remaining / 60), s = remaining % 60;
+    document.getElementById(id).textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    document.getElementById(id).classList.toggle('urgent', remaining <= 60);
+    if (remaining <= 0) { clearInterval(timers[id]); delete timers[id]; document.getElementById(id).textContent = '00:00'; }
+  }, 1000);
+}
+
+function resetTimer(id, total) {
+  clearInterval(timers[id]); delete timers[id];
+  delete document.getElementById(id).dataset.remaining;
+  const m = Math.floor(total/60), s = total%60;
+  document.getElementById(id).textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  document.getElementById(id).classList.remove('urgent');
+}
+
+// ─── READING ──────────────────────────────────────────────────────────────────
+const readingQs = [
+  { q: "What does the synaptic homeostasis hypothesis suggest about sleep?", opts: ["Sleep causes synaptic connections to increase","Sleep scales back synaptic connections to a sustainable baseline","Sleep has no effect on synaptic strength","Sleep only affects memory during REM stages"], ans: 1 },
+  { q: "According to paragraph D, what did the UC study find about people sleeping fewer than 6 hours?", opts: ["They had lower cytokine levels","They were twice as likely to get a cold","They were four times more likely to catch a cold","They showed no increase in susceptibility"], ans: 2 },
+  { q: "What is slow-wave sleep characterised by?", opts: ["Vivid dreaming and muscle paralysis","Large synchronised brain waves and physical restoration","Brain activity resembling wakefulness","Rapid eye movement"], ans: 1 },
+  { q: "The RAND Corporation figure ($411 billion) refers to:", opts: ["Cost of treating sleep disorders","Annual US productivity loss due to sleep deprivation","Investment in sleep research","Healthcare savings from better sleep"], ans: 1 },
+  { q: "Which paragraph introduces the idea that sleep research has economic implications?", opts: ["Paragraph B","Paragraph C","Paragraph D","Paragraph E"], ans: 3 },
+  { q: "What do cytokines do according to the passage?", opts: ["Help consolidate memories","Fight infection and inflammation","Regulate melatonin release","Cause sleep deprivation"], ans: 1 },
+  { q: "Students who sleep after studying outperform those who stay awake because:", opts: ["Sleep increases synaptic connections","Sleep consolidates new information by pruning synapses","REM sleep directly improves exam performance","Slow-wave sleep doubles memory capacity"], ans: 1 },
+  { q: "The phrase 'global sleep crisis' (paragraph E) is attributed to:", opts: ["The RAND Corporation","The University of California","Sleep researchers","The World Health Organisation"], ans: 2 },
+  { q: "Approximately how long does one complete sleep cycle last?", opts: ["45 minutes","90 minutes","120 minutes","6 hours"], ans: 1 },
+  { q: "Which best describes the overall purpose of the passage?", opts: ["To argue people should sleep more","To explain the biology and importance of sleep, and comment on modern attitudes to it","To promote a specific sleep therapy","To compare REM and non-REM sleep exclusively"], ans: 1 }
+];
+
+function buildReadingQuestions() {
+  const container = document.getElementById('reading-questions');
+  container.innerHTML = '';
+  readingQs.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'question-item';
+    div.innerHTML = `<p>${i+1}. ${q.q}</p><div class="options">${q.opts.map((o,j) => `<label id="rl-${i}-${j}"><input type="radio" name="rq${i}" value="${j}"> ${o}</label>`).join('')}</div>`;
+    container.appendChild(div);
+  });
+}
+
+function checkReading() {
+  let score = 0;
+  readingQs.forEach((q, i) => {
+    const chosen = document.querySelector(`input[name="rq${i}"]:checked`);
+    q.opts.forEach((_,j) => {
+      const lbl = document.getElementById(`rl-${i}-${j}`);
+      lbl.classList.remove('correct','wrong');
+      if (j === q.ans) lbl.classList.add('correct');
+      else if (chosen && parseInt(chosen.value) === j) lbl.classList.add('wrong');
+    });
+    if (chosen && parseInt(chosen.value) === q.ans) score++;
+  });
+  const key = document.getElementById('answer-key');
+  const content = document.getElementById('answer-key-content');
+  key.classList.add('show');
+  content.innerHTML = `<strong>Score: ${score} / ${readingQs.length}</strong> &nbsp;·&nbsp; ` +
+    readingQs.map((q,i) => `Q${i+1}: <span style="color:var(--accent2)">${q.opts[q.ans]}</span>`).join(' &nbsp;|&nbsp; ');
+}
+
+function resetReading() {
+  document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+  document.querySelectorAll('.options label').forEach(l => l.classList.remove('correct','wrong'));
+  document.getElementById('answer-key').classList.remove('show');
+}
+
+// ─── WRITING ──────────────────────────────────────────────────────────────────
+const task1Prompts = [
+  "The bar chart below shows the number of tourists visiting three different countries (France, Japan, and Brazil) between 2010 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+  "The pie charts below show the proportion of household energy use by category in Australia in 2000 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+  "The line graph below shows changes in the average price of petrol in four countries (the UK, Germany, the USA, and India) from 2005 to 2023. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+  "The diagram below shows the process of recycling plastic bottles. Summarise the information by selecting and reporting the main stages of the process.",
+  "The table below shows the percentage of people using the internet for different purposes in five countries in 2022. Summarise the information by selecting and reporting the main features, and make comparisons where relevant."
+];
+
+const task2Prompts = [
+  { type: "Opinion", q: "Some people believe that technology has made our lives more complex and stressful. Others argue it has greatly improved quality of life. Discuss both views and give your own opinion." },
+  { type: "Problem/Solution", q: "In many cities, traffic congestion is a serious problem. What are the main causes of this problem, and what measures could be taken to address it?" },
+  { type: "Agree/Disagree", q: "Universities should focus on providing students with academic skills rather than practical job skills. To what extent do you agree or disagree?" },
+  { type: "Two-part Question", q: "Many governments are investing in public transport as an alternative to private car use. Why do some people still choose to travel by car? What can governments do to encourage the use of public transport?" },
+  { type: "Opinion", q: "The increasing globalisation of companies has had a negative effect on local cultures and traditions. To what extent do you agree or disagree with this statement?" },
+  { type: "Agree/Disagree", q: "Children who grow up in poverty are disadvantaged throughout their lives. Agree or disagree?" },
+  { type: "Problem/Solution", q: "Obesity is an increasing problem in many countries. What are the causes of obesity? What measures could be taken to solve this problem?" }
+];
+
+let t1idx = 0, t2idx = 0;
+
+function newTask1Prompt() {
+  t1idx = (t1idx + 1) % task1Prompts.length;
+  document.getElementById('task1-prompt').textContent = task1Prompts[t1idx];
+  document.getElementById('task1-text').value = '';
+  countWords('task1-text','wc1',150);
+}
+
+function newTask2Prompt() {
+  t2idx = (t2idx + 1) % task2Prompts.length;
+  const p = task2Prompts[t2idx];
+  document.getElementById('task2-prompt').innerHTML = `<span style="font-size:12px;color:var(--accent3);font-weight:700;text-transform:uppercase;letter-spacing:1px;">${p.type}</span><br><br>${p.q}`;
+  document.getElementById('task2-text').value = '';
+  countWords('task2-text','wc2',250);
+}
+
+function showWritingTask(n) {
+  document.getElementById('writing-task1').style.display = n === 1 ? '' : 'none';
+  document.getElementById('writing-task2').style.display = n === 2 ? '' : 'none';
+  document.getElementById('wbtn1').className = n===1 ? 'btn btn-warning' : 'btn btn-outline';
+  document.getElementById('wbtn2').className = n===2 ? 'btn btn-primary' : 'btn btn-outline';
+}
+
+function countWords(textId, countId, min) {
+  const text = document.getElementById(textId).value.trim();
+  const count = text === '' ? 0 : text.split(/\s+/).length;
+  const el = document.getElementById(countId);
+  el.textContent = `${count} / ${min} words minimum`;
+  el.className = 'word-count' + (count >= min ? ' ok' : count >= min * 0.8 ? ' warn' : '');
+}
+
+// ─── SPEAKING ─────────────────────────────────────────────────────────────────
+const part1Topics = [
+  { title: "Hometown", qs: ["Where are you from?", "What do you like most about your hometown?", "Has your hometown changed much in recent years?", "Would you like to live somewhere else in the future?"] },
+  { title: "Work / Study", qs: ["Do you work or are you a student?", "What subject are you studying / What do you do at work?", "Why did you choose that subject / job?", "What are your plans for the future?"] },
+  { title: "Free Time", qs: ["What do you like to do in your free time?", "Have your hobbies changed since you were a child?", "Do you prefer spending time alone or with friends?"] },
+  { title: "Food", qs: ["Do you enjoy cooking?", "What is your favourite type of food?", "Do you prefer eating at home or in restaurants?", "Has food in your country changed in recent years?"] },
+  { title: "Travel", qs: ["Do you enjoy travelling?", "What kind of places do you like to visit?", "Have you ever visited another country?"] },
+];
+
+const part2Topics = [
+  { title: "Describe a memorable journey", cue: "<strong>You should say:</strong><ul><li>where you went</li><li>who you went with</li><li>what you did there</li></ul><strong>and explain why this journey was memorable.</strong><br><br><em>Tip: Organise around time: before → during → how you felt after.</em>" },
+  { title: "Describe a person who has influenced you", cue: "<strong>You should say:</strong><ul><li>who this person is</li><li>how you know them</li><li>what qualities they have</li></ul><strong>and explain how they have influenced you.</strong><br><br><em>Tip: Be specific — give an example of something they said or did.</em>" },
+  { title: "Describe a skill you would like to learn", cue: "<strong>You should say:</strong><ul><li>what the skill is</li><li>why you want to learn it</li><li>how you would go about learning it</li></ul><strong>and explain how learning this skill would benefit you.</strong>" },
+  { title: "Describe a book or film that had a big impact on you", cue: "<strong>You should say:</strong><ul><li>what the book/film was about</li><li>when you read/watched it</li><li>what you particularly liked about it</li></ul><strong>and explain what impact it had on you.</strong>" },
+];
+
+const part3Topics = [
+  { title: "Travel & Tourism", qs: ["How has tourism changed your country?", "What are the advantages and disadvantages of mass tourism?", "Do you think it is important to travel internationally? Why?"] },
+  { title: "Education & Learning", qs: ["How has technology changed the way people learn?", "Should education focus more on practical skills?", "Why do some adults choose to continue their education later in life?"] },
+  { title: "Technology & Society", qs: ["In what ways has technology changed social interaction?", "Do the benefits of social media outweigh the disadvantages?", "How might technology change the workplace in the next 20 years?"] },
+];
+
+function buildSpeaking() {
+  function buildTopics(topics, containerId, type) {
+    const c = document.getElementById(containerId);
+    topics.forEach((t, i) => {
+      const div = document.createElement('div');
+      div.className = 'topic-card';
+      div.innerHTML = `<div class="topic-title">${t.title}</div>` +
+        (type === 'p2'
+          ? `<div class="cue-card">${t.cue}</div>`
+          : `<div class="cue-card"><ul>${(t.qs||[]).map(q=>`<li>${q}</li>`).join('')}</ul></div>`);
+      div.onclick = () => div.classList.toggle('open');
+      c.appendChild(div);
+    });
+  }
+  buildTopics(part1Topics, 'part1-topics', 'p1');
+  buildTopics(part2Topics, 'part2-topics', 'p2');
+  buildTopics(part3Topics, 'part3-topics', 'p3');
+}
+
+// ─── VOCABULARY ───────────────────────────────────────────────────────────────
+const vocabData = {
+  "Environment": [
+    { w:"biodiversity", pos:"n.", def:"The variety of plant and animal life in a habitat.", ex:"Loss of biodiversity threatens entire ecosystems." },
+    { w:"sustainable", pos:"adj.", def:"Able to be maintained without depleting natural resources.", ex:"We need sustainable energy alternatives." },
+    { w:"emissions", pos:"n.", def:"Gases or other substances released into the atmosphere.", ex:"Carbon emissions have risen sharply since industrialisation." },
+    { w:"deforestation", pos:"n.", def:"The clearing or thinning of forests by humans.", ex:"Deforestation is a leading cause of habitat loss." },
+    { w:"conservation", pos:"n.", def:"Protection of the natural environment.", ex:"Conservation efforts have helped many endangered species recover." },
+    { w:"renewable", pos:"adj.", def:"(Of energy) from a source that is not depleted when used.", ex:"Renewable energy includes solar, wind, and hydroelectric power." },
+    { w:"contaminate", pos:"v.", def:"To make impure by exposure to pollutants.", ex:"Industrial waste has contaminated local water sources." },
+    { w:"mitigation", pos:"n.", def:"The action of reducing the severity of something.", ex:"Mitigation strategies are essential for dealing with climate change." },
+  ],
+  "Technology": [
+    { w:"automation", pos:"n.", def:"The use of technology to perform tasks without human input.", ex:"Automation has transformed manufacturing processes worldwide." },
+    { w:"innovation", pos:"n.", def:"The introduction of new ideas, methods, or products.", ex:"Silicon Valley is renowned for technological innovation." },
+    { w:"infrastructure", pos:"n.", def:"The basic physical systems needed for a society to function.", ex:"Outdated digital infrastructure hinders economic growth." },
+    { w:"algorithm", pos:"n.", def:"A set of rules for solving a problem or making decisions.", ex:"The algorithm analyses user behaviour to recommend content." },
+    { w:"surveillance", pos:"n.", def:"Close observation, especially of a suspected person or group.", ex:"Widespread digital surveillance raises serious privacy concerns." },
+    { w:"obsolete", pos:"adj.", def:"No longer used; out of date.", ex:"Smartphones have rendered many older devices obsolete." },
+    { w:"proliferation", pos:"n.", def:"Rapid increase in the number or amount of something.", ex:"The proliferation of social media has changed communication." },
+    { w:"cybersecurity", pos:"n.", def:"Protection of computer systems from theft or damage.", ex:"Governments are investing heavily in cybersecurity measures." },
+  ],
+  "Society": [
+    { w:"inequality", pos:"n.", def:"Difference in size, degree, or social standing.", ex:"Income inequality has widened in many developed nations." },
+    { w:"demographic", pos:"adj./n.", def:"Relating to the structure of populations.", ex:"Ageing demographics place pressure on pension systems." },
+    { w:"integration", pos:"n.", def:"The action of combining groups into a whole.", ex:"Social integration of migrants remains a policy challenge." },
+    { w:"marginalised", pos:"adj.", def:"Treated as insignificant or peripheral.", ex:"Marginalised communities often lack access to quality healthcare." },
+    { w:"urbanisation", pos:"n.", def:"The process by which towns and cities grow larger.", ex:"Rapid urbanisation in Asia has led to megacity development." },
+    { w:"welfare", pos:"n.", def:"Statutory procedures to provide support for citizens.", ex:"The welfare state emerged in post-war Europe." },
+    { w:"cohesion", pos:"n.", def:"The action of forming a united whole.", ex:"Social cohesion depends on shared values and institutions." },
+    { w:"disparity", pos:"n.", def:"A great difference.", ex:"There are stark disparities in educational outcomes between regions." },
+  ],
+  "Health": [
+    { w:"prevalence", pos:"n.", def:"The fact of being widespread in a particular area.", ex:"The prevalence of obesity has doubled in 30 years." },
+    { w:"sedentary", pos:"adj.", def:"Involving little physical activity.", ex:"Sedentary lifestyles are linked to cardiovascular disease." },
+    { w:"intervention", pos:"n.", def:"Action taken to improve a situation.", ex:"Early intervention is key to treating mental health disorders." },
+    { w:"chronic", pos:"adj.", def:"Persisting for a long time or constantly recurring.", ex:"Chronic stress weakens the immune system." },
+    { w:"mortality", pos:"n.", def:"The state of being subject to death; death rate.", ex:"Child mortality rates have fallen significantly worldwide." },
+    { w:"epidemic", pos:"n.", def:"A widespread occurrence of an infectious disease.", ex:"The obesity epidemic is a major public health challenge." },
+    { w:"therapeutic", pos:"adj.", def:"Relating to the healing of disease.", ex:"Exercise has therapeutic benefits beyond physical fitness." },
+    { w:"prognosis", pos:"n.", def:"A forecast of the likely outcome of a disease.", ex:"With early diagnosis, the prognosis is generally positive." },
+  ],
+  "Economy": [
+    { w:"fiscal", pos:"adj.", def:"Relating to government revenue, especially taxes.", ex:"The government announced a new fiscal stimulus package." },
+    { w:"recession", pos:"n.", def:"A period of temporary economic decline.", ex:"The 2008 financial crisis triggered a global recession." },
+    { w:"expenditure", pos:"n.", def:"The action of spending funds.", ex:"Public expenditure on education has increased this decade." },
+    { w:"subsidy", pos:"n.", def:"A sum of money granted by the state to an industry.", ex:"Agricultural subsidies distort free-market competition." },
+    { w:"fluctuation", pos:"n.", def:"Irregular rising and falling.", ex:"Currency fluctuations create uncertainty for businesses." },
+    { w:"gross domestic product", pos:"n.", def:"Total value of goods produced by a country in a year.", ex:"GDP growth slowed to 1.2% in the last quarter." },
+    { w:"inflation", pos:"n.", def:"A general increase in prices and fall in purchasing power.", ex:"High inflation erodes household savings." },
+    { w:"entrepreneur", pos:"n.", def:"A person who sets up a business, taking on financial risk.", ex:"Entrepreneurs drive innovation in a market economy." },
+  ],
+};
+
+function buildVocab() {
+  const tabsEl = document.getElementById('vocab-tabs');
+  const contentEl = document.getElementById('vocab-content');
+  const topics = Object.keys(vocabData);
+  topics.forEach((topic, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'vtab' + (i===0?' active':'');
+    btn.textContent = topic;
+    btn.onclick = () => {
+      document.querySelectorAll('.vtab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.vocab-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('vs-'+i).classList.add('active');
+    };
+    tabsEl.appendChild(btn);
+
+    const sec = document.createElement('div');
+    sec.className = 'vocab-section' + (i===0?' active':'');
+    sec.id = 'vs-'+i;
+    sec.innerHTML = `<div class="word-grid">${vocabData[topic].map(w => `
+      <div class="word-card">
+        <div class="word">${w.w}</div>
+        <div class="pos">${w.pos}</div>
+        <div class="def">${w.def}</div>
+        <div class="example">"${w.ex}"</div>
+      </div>`).join('')}</div>`;
+    contentEl.appendChild(sec);
+  });
+}
+
+// ─── GRAMMAR ──────────────────────────────────────────────────────────────────
+const grammarErrors = [
+  { title: "Articles (a / an / the)", wrong: "Government should invest in education.", right: "The government should invest in education.", exp: "Use 'the' when referring to a specific, already-known, or unique entity. 'The government' in a specific country context is definite. Missing articles are one of the most penalised errors in IELTS Writing." },
+  { title: "Subject-verb agreement", wrong: "The number of people who use smartphones are increasing.", right: "The number of people who use smartphones is increasing.", exp: "'The number of…' takes a singular verb. 'A number of…' takes a plural verb. This distinction trips up even advanced speakers." },
+  { title: "Countable vs. uncountable nouns", wrong: "There are many informations available online.", right: "There is a great deal of information available online.", exp: "'Information', 'evidence', 'research', 'advice', 'news', and 'knowledge' are uncountable. Never add -s or use 'many' with them." },
+  { title: "Tense consistency", wrong: "Pollution increased dramatically in the 1990s and affects millions today.", right: "Pollution increased dramatically in the 1990s and continues to affect millions today.", exp: "When describing a historical trend that is ongoing, use past tense for the historical fact and a present/present continuous for the current state. Mixing tenses randomly signals poor control." },
+  { title: "Avoiding 'people is'", wrong: "People is becoming more aware of climate change.", right: "People are becoming more aware of climate change.", exp: "'People' is always plural in English. Use 'person' for singular. Similarly: 'staff are', 'police are', 'public are'." },
+  { title: "Overuse of 'also'", wrong: "Technology has also changed education. It has also affected healthcare. It has also impacted the economy.", right: "Technology has transformed education. Furthermore, it has reshaped healthcare. Its impact on the economy is equally significant.", exp: "Starting consecutive sentences with 'also' is a sign of limited cohesion. Use a variety of discourse markers: Furthermore, Moreover, In addition, Equally, Similarly, By the same token." },
+  { title: "Because vs. Because of", wrong: "The pollution increased because of people drive more cars.", right: "The pollution increased because people drive more cars. / The pollution increased because of increased car use.", exp: "'Because' is followed by a clause (subject + verb). 'Because of' is followed by a noun phrase. Confusing these is a very common error." },
+  { title: "Passive voice overuse", wrong: "It is believed by many people that it is considered by experts that technology is used by young people.", right: "Many people believe that technology dominates young people's lives.", exp: "The passive is useful for formality, but overuse creates unclear, wordy prose. Use active voice as the default; switch to passive only when the agent is unknown, unimportant, or deliberately backgrounded." },
+];
+
+function buildGrammar() {
+  const el = document.getElementById('grammar-content');
+  grammarErrors.forEach(e => {
+    const div = document.createElement('div');
+    div.className = 'error-card';
+    div.innerHTML = `
+      <h3>${e.title}</h3>
+      <div class="wrong-eg">✗ ${e.wrong}</div>
+      <div class="right-eg">✓ ${e.right}</div>
+      <div class="explanation">${e.exp}</div>`;
+    el.appendChild(div);
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadBands();
+loadChecks();
+buildReadingQuestions();
+buildSpeaking();
+buildVocab();
+buildGrammar();
+
+// Initialise writing prompts
+document.getElementById('task1-prompt').textContent = task1Prompts[0];
+document.getElementById('task2-prompt').innerHTML = `<span style="font-size:12px;color:var(--accent3);font-weight:700;text-transform:uppercase;letter-spacing:1px;">${task2Prompts[0].type}</span><br><br>${task2Prompts[0].q}`;
+</script>
+</body>
+</html>
