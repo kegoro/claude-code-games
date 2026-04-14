@@ -523,7 +523,7 @@
 <!-- ===================== READING ===================== -->
 <div id="page-reading" class="page">
   <h1>Reading Practice</h1>
-  <p class="subtitle">Academic passage · ~13 minutes · 10 questions</p>
+  <p class="subtitle">3 academic passages · ~13 minutes each · 10 questions per passage</p>
 
   <div class="timer-bar">
     <span style="font-size:14px;color:var(--muted);">Timer:</span>
@@ -532,25 +532,17 @@
     <button class="btn btn-outline" style="padding:6px 14px;font-size:13px;" onclick="resetTimer('read-timer',780)">Reset</button>
   </div>
 
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="passage-selector"></div>
+
   <div class="card">
-    <h3>Passage: The Science of Sleep</h3>
-    <div class="passage-box">
-      <p><strong>A</strong> Sleep is one of the most fundamental biological processes, yet it remains one of the least understood. Scientists have long debated why humans and animals need to sleep at all, given that it renders them vulnerable and temporarily halts productive activity. Recent research, however, suggests that sleep serves multiple critical functions — from memory consolidation to cellular repair — that cannot be performed while awake.</p>
-      <p><strong>B</strong> The human sleep cycle consists of several distinct stages, broadly classified into REM (rapid eye movement) and non-REM sleep. Non-REM sleep progresses through three stages of increasing depth. In the deepest stage, known as slow-wave sleep, the brain emits large, synchronised electrical waves, the heart rate slows, and the body undertakes much of its physical restoration. REM sleep, by contrast, is characterised by brain activity resembling wakefulness, paralysis of most voluntary muscles, and vivid dreaming. A full cycle lasts approximately 90 minutes, and healthy adults complete four to six cycles per night.</p>
-      <p><strong>C</strong> One prevailing theory, the synaptic homeostasis hypothesis, proposes that wakefulness causes a net increase in synaptic strength across the brain. As we learn and experience new things, synaptic connections are reinforced. Sleep, according to this view, serves to scale back these connections to a sustainable baseline — a process of "pruning" that prevents the brain from becoming saturated. This explains why students who sleep after studying consistently outperform those who remain awake, a finding replicated across dozens of studies.</p>
-      <p><strong>D</strong> Beyond cognition, sleep is essential for immune function. During slow-wave sleep, the body releases cytokines — proteins that help fight infection and inflammation. Chronic sleep deprivation has been linked to increased susceptibility to the common cold, accelerated progression of certain cancers, and elevated levels of inflammatory markers associated with cardiovascular disease. A landmark study by researchers at the University of California found that subjects who slept fewer than six hours per night were four times more likely to catch a cold when exposed to a rhinovirus than those who slept eight hours or more.</p>
-      <p><strong>E</strong> Despite this evidence, modern society systematically undervalues sleep. The widespread glorification of overwork, artificial light exposure delaying melatonin release, and the ubiquity of screens in bedrooms have collectively contributed to what sleep researchers call a "global sleep crisis." The World Health Organisation has described insufficient sleep as an epidemic across industrialised nations. The economic cost is equally stark: the RAND Corporation estimated that the United States loses approximately $411 billion annually in productivity due to sleep deprivation, arising from absenteeism, accidents, and reduced cognitive output.</p>
-    </div>
-
+    <h3 id="passage-title"></h3>
+    <div class="passage-box" id="passage-body"></div>
     <h3 style="margin-bottom:14px;">Questions 1–10</h3>
-
     <div id="reading-questions"></div>
-
     <div style="display:flex;gap:10px;margin-top:16px;">
       <button class="btn btn-success" onclick="checkReading()">Check Answers</button>
       <button class="btn btn-outline" onclick="resetReading()">Reset</button>
     </div>
-
     <div class="answer-key" id="answer-key">
       <strong style="color:var(--accent2);">Answer Key:</strong>
       <div id="answer-key-content" style="margin-top:10px;font-size:14px;line-height:2;"></div>
@@ -798,23 +790,102 @@ function resetTimer(id, total) {
 }
 
 // ─── READING ──────────────────────────────────────────────────────────────────
-const readingQs = [
-  { q: "What does the synaptic homeostasis hypothesis suggest about sleep?", opts: ["Sleep causes synaptic connections to increase","Sleep scales back synaptic connections to a sustainable baseline","Sleep has no effect on synaptic strength","Sleep only affects memory during REM stages"], ans: 1 },
-  { q: "According to paragraph D, what did the UC study find about people sleeping fewer than 6 hours?", opts: ["They had lower cytokine levels","They were twice as likely to get a cold","They were four times more likely to catch a cold","They showed no increase in susceptibility"], ans: 2 },
-  { q: "What is slow-wave sleep characterised by?", opts: ["Vivid dreaming and muscle paralysis","Large synchronised brain waves and physical restoration","Brain activity resembling wakefulness","Rapid eye movement"], ans: 1 },
-  { q: "The RAND Corporation figure ($411 billion) refers to:", opts: ["Cost of treating sleep disorders","Annual US productivity loss due to sleep deprivation","Investment in sleep research","Healthcare savings from better sleep"], ans: 1 },
-  { q: "Which paragraph introduces the idea that sleep research has economic implications?", opts: ["Paragraph B","Paragraph C","Paragraph D","Paragraph E"], ans: 3 },
-  { q: "What do cytokines do according to the passage?", opts: ["Help consolidate memories","Fight infection and inflammation","Regulate melatonin release","Cause sleep deprivation"], ans: 1 },
-  { q: "Students who sleep after studying outperform those who stay awake because:", opts: ["Sleep increases synaptic connections","Sleep consolidates new information by pruning synapses","REM sleep directly improves exam performance","Slow-wave sleep doubles memory capacity"], ans: 1 },
-  { q: "The phrase 'global sleep crisis' (paragraph E) is attributed to:", opts: ["The RAND Corporation","The University of California","Sleep researchers","The World Health Organisation"], ans: 2 },
-  { q: "Approximately how long does one complete sleep cycle last?", opts: ["45 minutes","90 minutes","120 minutes","6 hours"], ans: 1 },
-  { q: "Which best describes the overall purpose of the passage?", opts: ["To argue people should sleep more","To explain the biology and importance of sleep, and comment on modern attitudes to it","To promote a specific sleep therapy","To compare REM and non-REM sleep exclusively"], ans: 1 }
+const passages = [
+  {
+    title: "Passage 1: The Science of Sleep",
+    body: `
+      <p><strong>A</strong> Sleep is one of the most fundamental biological processes, yet it remains one of the least understood. Scientists have long debated why humans and animals need to sleep at all, given that it renders them vulnerable and temporarily halts productive activity. Recent research, however, suggests that sleep serves multiple critical functions — from memory consolidation to cellular repair — that cannot be performed while awake.</p>
+      <p><strong>B</strong> The human sleep cycle consists of several distinct stages, broadly classified into REM (rapid eye movement) and non-REM sleep. Non-REM sleep progresses through three stages of increasing depth. In the deepest stage, known as slow-wave sleep, the brain emits large, synchronised electrical waves, the heart rate slows, and the body undertakes much of its physical restoration. REM sleep, by contrast, is characterised by brain activity resembling wakefulness, paralysis of most voluntary muscles, and vivid dreaming. A full cycle lasts approximately 90 minutes, and healthy adults complete four to six cycles per night.</p>
+      <p><strong>C</strong> One prevailing theory, the synaptic homeostasis hypothesis, proposes that wakefulness causes a net increase in synaptic strength across the brain. As we learn and experience new things, synaptic connections are reinforced. Sleep, according to this view, serves to scale back these connections to a sustainable baseline — a process of "pruning" that prevents the brain from becoming saturated. This explains why students who sleep after studying consistently outperform those who remain awake, a finding replicated across dozens of studies.</p>
+      <p><strong>D</strong> Beyond cognition, sleep is essential for immune function. During slow-wave sleep, the body releases cytokines — proteins that help fight infection and inflammation. Chronic sleep deprivation has been linked to increased susceptibility to the common cold, accelerated progression of certain cancers, and elevated levels of inflammatory markers associated with cardiovascular disease. A landmark study by researchers at the University of California found that subjects who slept fewer than six hours per night were four times more likely to catch a cold when exposed to a rhinovirus than those who slept eight hours or more.</p>
+      <p><strong>E</strong> Despite this evidence, modern society systematically undervalues sleep. The widespread glorification of overwork, artificial light exposure delaying melatonin release, and the ubiquity of screens in bedrooms have collectively contributed to what sleep researchers call a "global sleep crisis." The World Health Organisation has described insufficient sleep as an epidemic across industrialised nations. The economic cost is equally stark: the RAND Corporation estimated that the United States loses approximately $411 billion annually in productivity due to sleep deprivation, arising from absenteeism, accidents, and reduced cognitive output.</p>`,
+    questions: [
+      { q: "What does the synaptic homeostasis hypothesis suggest about sleep?", opts: ["Sleep causes synaptic connections to increase","Sleep scales back synaptic connections to a sustainable baseline","Sleep has no effect on synaptic strength","Sleep only affects memory during REM stages"], ans: 1 },
+      { q: "According to paragraph D, what did the UC study find about people sleeping fewer than 6 hours?", opts: ["They had lower cytokine levels","They were twice as likely to get a cold","They were four times more likely to catch a cold","They showed no increase in susceptibility"], ans: 2 },
+      { q: "What is slow-wave sleep characterised by?", opts: ["Vivid dreaming and muscle paralysis","Large synchronised brain waves and physical restoration","Brain activity resembling wakefulness","Rapid eye movement"], ans: 1 },
+      { q: "The RAND Corporation figure ($411 billion) refers to:", opts: ["Cost of treating sleep disorders","Annual US productivity loss due to sleep deprivation","Investment in sleep research","Healthcare savings from better sleep"], ans: 1 },
+      { q: "Which paragraph introduces the idea that sleep research has economic implications?", opts: ["Paragraph B","Paragraph C","Paragraph D","Paragraph E"], ans: 3 },
+      { q: "What do cytokines do according to the passage?", opts: ["Help consolidate memories","Fight infection and inflammation","Regulate melatonin release","Cause sleep deprivation"], ans: 1 },
+      { q: "Students who sleep after studying outperform those who stay awake because:", opts: ["Sleep increases synaptic connections","Sleep consolidates new information by pruning synapses","REM sleep directly improves exam performance","Slow-wave sleep doubles memory capacity"], ans: 1 },
+      { q: "The phrase 'global sleep crisis' (paragraph E) is attributed to:", opts: ["The RAND Corporation","The University of California","Sleep researchers","The World Health Organisation"], ans: 2 },
+      { q: "Approximately how long does one complete sleep cycle last?", opts: ["45 minutes","90 minutes","120 minutes","6 hours"], ans: 1 },
+      { q: "Which best describes the overall purpose of the passage?", opts: ["To argue people should sleep more","To explain the biology and importance of sleep, and comment on modern attitudes to it","To promote a specific sleep therapy","To compare REM and non-REM sleep exclusively"], ans: 1 }
+    ]
+  },
+  {
+    title: "Passage 2: The Rise of Urban Farming",
+    body: `
+      <p><strong>A</strong> For most of human history, food production was confined to rural landscapes — vast fields, orchards, and grazing land far removed from city centres. That assumption is rapidly changing. Urban farming, the practice of cultivating, processing, and distributing food within city boundaries, has emerged as one of the most significant agricultural trends of the twenty-first century. Driven by concerns over food security, environmental sustainability, and community resilience, cities across the world are reclaiming disused rooftops, vacant lots, and industrial buildings to grow food closer to the people who eat it.</p>
+      <p><strong>B</strong> The forms urban agriculture takes are remarkably varied. Rooftop gardens, installed on the flat surfaces of apartment blocks and commercial buildings, are among the most visible. Vertical farms — multi-storey installations in which crops are grown in stacked rows under precisely controlled LED lighting without soil — represent a more technologically advanced approach. Community allotments, in which urban residents are allocated small plots of land to cultivate personally, have a long tradition in Northern Europe and are spreading globally. Meanwhile, hydroponic and aquaponic systems, which grow plants in nutrient-rich water rather than soil, have become popular in warehouse settings because they can produce yields up to ten times greater per square metre than conventional outdoor farming.</p>
+      <p><strong>C</strong> Proponents of urban agriculture point to a range of benefits beyond simply producing food. Localised food production reduces the distance ingredients travel from farm to plate — sometimes referred to as "food miles" — thereby cutting greenhouse gas emissions associated with refrigerated transport. Urban green spaces, including farms, also help mitigate the urban heat island effect: cities are typically warmer than surrounding areas due to heat-absorbing concrete and asphalt, and vegetation absorbs and re-radiates heat more slowly. Studies in several countries have further suggested that community gardens improve residents' mental health, reduce social isolation, and foster a sense of belonging among diverse urban populations.</p>
+      <p><strong>D</strong> Despite these advantages, urban farming faces substantial obstacles. The most fundamental is land: cities are among the most contested real estate environments in the world, and dedicating valuable urban space to agriculture must compete with demands for housing, commerce, and infrastructure. Start-up costs for high-tech vertical farms can run into millions of dollars, making them inaccessible to smallholders without significant subsidy or investment. Water management is another concern; while hydroponic systems use considerably less water than traditional farming, cities in drought-prone regions may struggle to justify increased agricultural water use. Critics also note that the yields achievable in urban settings, even with advanced technology, cannot realistically substitute for large-scale rural food production.</p>
+      <p><strong>E</strong> Nevertheless, the long-term trajectory of urban farming appears positive. Falling costs for LED lighting, sensors, and automation technology are making vertical farms progressively more economically viable. Several national governments, including those of Singapore and the Netherlands, have incorporated urban food production targets into official agricultural policy, recognising that urban farming is not a replacement for conventional agriculture but a valuable supplement that enhances resilience in the food supply chain. As climate change increases the vulnerability of traditional farming regions to drought, flooding, and extreme heat, the ability to produce food within cities may shift from an ecological experiment to a strategic necessity.</p>`,
+    questions: [
+      { q: "Which of the following is NOT mentioned as a form of urban farming in paragraph B?", opts: ["Rooftop gardens","Vertical farms","Hydroponic systems","Underground tunnels"], ans: 3 },
+      { q: "According to paragraph B, how do hydroponic systems differ from conventional outdoor farming?", opts: ["They use no artificial lighting","They can yield up to ten times more per square metre","They require significantly more water","They are only suitable for rooftop environments"], ans: 1 },
+      { q: "What does the term 'food miles' refer to in paragraph C?", opts: ["The nutritional distance between fresh and processed food","The distance food travels from farm to consumer","The carbon footprint of packaging materials","The number of countries involved in food production"], ans: 1 },
+      { q: "What is the 'urban heat island effect' described as in paragraph C?", opts: ["A method of heating urban farms","The phenomenon of cities being warmer than surrounding rural areas","The use of LED lighting to simulate sunlight","The impact of vertical farms on local temperature"], ans: 1 },
+      { q: "According to paragraph D, what is the most fundamental obstacle to urban farming?", opts: ["Water scarcity","High technology costs","Competition for land","Insufficient crop variety"], ans: 2 },
+      { q: "Which word in paragraph D is closest in meaning to 'contested'?", opts: ["Spacious","Disputed","Deteriorated","Regulated"], ans: 1 },
+      { q: "What is the author's view of urban farming in paragraph E?", opts: ["It will entirely replace rural agriculture","It is currently unprofitable and unlikely to grow","It is a valuable supplement to conventional farming rather than a replacement","It is only viable in wealthy nations"], ans: 2 },
+      { q: "Why does the passage mention Singapore and the Netherlands in paragraph E?", opts: ["As examples of cities where urban farming has failed","As countries that have integrated urban farming into official policy","As nations with the highest food miles reduction","As case studies in failed vertical farm investment"], ans: 1 },
+      { q: "The passage suggests that urban farming may become 'a strategic necessity' because:", opts: ["Rural populations are declining rapidly","Climate change threatens the reliability of conventional farming","Urban populations are growing faster than rural ones","Governments are cutting subsidies for traditional agriculture"], ans: 1 },
+      { q: "What is the main purpose of this passage?", opts: ["To argue that urban farming should replace all rural food production","To present a balanced overview of urban farming's potential, benefits, and limitations","To warn governments about the dangers of over-investing in urban agriculture","To explain the technical differences between hydroponic and aeroponic systems"], ans: 1 }
+    ]
+  },
+  {
+    title: "Passage 3: Artificial Intelligence in Healthcare",
+    body: `
+      <p><strong>A</strong> Artificial intelligence (AI) is reshaping industries at an unprecedented pace, but perhaps nowhere is its potential — and its controversy — more pronounced than in healthcare. From diagnosing cancer to streamlining hospital administration, AI systems are beginning to augment, and in some cases surpass, the capabilities of human clinicians. The prospect of machines that can process millions of data points instantly and identify patterns invisible to the human eye has generated enormous optimism among researchers and policymakers. At the same time, it has provoked serious ethical and practical concerns that the medical community is only beginning to address.</p>
+      <p><strong>B</strong> One of the most advanced applications of AI in medicine is medical imaging analysis. Deep learning algorithms, trained on hundreds of thousands of labelled scans, have demonstrated remarkable accuracy in detecting conditions such as diabetic retinopathy, skin cancer, and pulmonary nodules. A widely cited 2019 study published in Nature found that an AI system outperformed a team of eleven expert radiologists in detecting breast cancer from mammograms, reducing both false positives and false negatives. Proponents argue that such systems can function as a second opinion for overworked clinicians, catching errors that fatigue or cognitive bias might otherwise cause.</p>
+      <p><strong>C</strong> Beyond diagnosis, AI is transforming the process of drug discovery. Traditionally, developing a new pharmaceutical compound takes an average of twelve to fifteen years and costs upwards of two billion dollars — a process dominated by trial and error. AI platforms can now screen billions of molecular combinations in silico, identifying the most promising candidates for laboratory testing in a fraction of the time. During the COVID-19 pandemic, AI tools played a significant role in identifying existing drugs that could be repurposed for treatment and in accelerating the search for novel antiviral compounds, compressing timelines that would historically have taken decades.</p>
+      <p><strong>D</strong> Despite these advances, critics raise compelling objections. One major concern is algorithmic bias: AI systems are only as equitable as the data they are trained on. If training datasets over-represent certain demographic groups — as is often the case in medical research, which has historically enrolled disproportionately white, male subjects — the resulting algorithms may perform poorly for underrepresented populations. A landmark study found that a widely deployed clinical AI tool assigned lower risk scores to Black patients than to equally ill white patients, leading to systematic disparities in care. Privacy presents a further challenge: training high-quality medical AI requires access to vast quantities of sensitive patient data, raising questions about consent, data ownership, and the security of health records.</p>
+      <p><strong>E</strong> The broader question of accountability remains unresolved. When an AI system contributes to a misdiagnosis or recommends an inappropriate treatment, who bears responsibility — the clinician who acted on the recommendation, the hospital that deployed the system, or the technology company that built it? Current regulatory frameworks were not designed with autonomous medical algorithms in mind, and legislators in most countries are struggling to keep pace with the technology's development. Most medical experts agree that AI should be treated as a powerful tool to assist rather than replace human judgement, preserving the physician's role not only as diagnostician but as communicator, advocate, and ethical decision-maker. The challenge for the coming decade will be to harness AI's considerable capabilities while building governance structures robust enough to protect patients from its limitations.</p>`,
+    questions: [
+      { q: "What does the author say about AI's potential in healthcare in paragraph A?", opts: ["It has already fully replaced human clinicians","It generates both optimism and serious concerns","It is mainly useful for hospital administration","It has been unanimously welcomed by the medical community"], ans: 1 },
+      { q: "According to paragraph B, what did the 2019 Nature study demonstrate?", opts: ["AI struggled to match radiologist performance on mammograms","AI could only detect one type of cancer","An AI system outperformed eleven expert radiologists in detecting breast cancer","Radiologists preferred working without AI assistance"], ans: 2 },
+      { q: "What does 'in silico' (paragraph C) most likely mean in this context?", opts: ["In a laboratory setting","Using computer simulation","In a clinical trial","Using silicon-based materials"], ans: 1 },
+      { q: "How long does the passage say traditional drug development takes?", opts: ["Five to seven years","Twelve to fifteen years","Twenty years","Less than a decade"], ans: 1 },
+      { q: "What was AI's role in the COVID-19 pandemic according to paragraph C?", opts: ["It developed vaccines entirely autonomously","It identified repurposable drugs and accelerated the search for antiviral compounds","It replaced clinical trials entirely","It primarily managed hospital logistics"], ans: 1 },
+      { q: "What is 'algorithmic bias' as described in paragraph D?", opts: ["The tendency of AI to favour older treatment methods","Inaccuracy caused by training data that does not fairly represent all populations","A deliberate flaw introduced by technology companies","The preference of AI systems for certain diagnostic tools"], ans: 1 },
+      { q: "What problem did the landmark study in paragraph D reveal about a deployed clinical AI tool?", opts: ["It was too expensive for hospitals to adopt","It assigned lower risk scores to Black patients than equally ill white patients","It could only process data from electronic health records","It performed poorly on imaging tasks"], ans: 1 },
+      { q: "According to paragraph E, which issue regarding AI in healthcare is described as 'unresolved'?", opts: ["The cost of AI systems","The accuracy of diagnostic AI","Accountability when AI causes harm","The regulation of data privacy"], ans: 2 },
+      { q: "What do 'most medical experts' agree on, according to paragraph E?", opts: ["AI should operate independently of clinicians","AI will make human physicians obsolete within ten years","AI should assist rather than replace human judgement","AI is not yet reliable enough for clinical use"], ans: 2 },
+      { q: "Which best describes the author's overall tone in this passage?", opts: ["Enthusiastically supportive of AI in medicine","Strongly opposed to AI in clinical settings","Balanced, acknowledging both promise and significant challenges","Neutral with no clear position"], ans: 2 }
+    ]
+  }
 ];
 
+let currentPassage = 0;
+
+function buildPassageSelector() {
+  const sel = document.getElementById('passage-selector');
+  sel.innerHTML = '';
+  passages.forEach((p, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'btn ' + (i === 0 ? 'btn-primary' : 'btn-outline');
+    btn.textContent = `Passage ${i + 1}`;
+    btn.onclick = () => switchPassage(i);
+    sel.appendChild(btn);
+  });
+}
+
+function switchPassage(idx) {
+  currentPassage = idx;
+  document.getElementById('passage-title').textContent = passages[idx].title;
+  document.getElementById('passage-body').innerHTML = passages[idx].body;
+  const btns = document.getElementById('passage-selector').querySelectorAll('button');
+  btns.forEach((b, i) => { b.className = 'btn ' + (i === idx ? 'btn-primary' : 'btn-outline'); });
+  buildReadingQuestions();
+  resetReading();
+  resetTimer('read-timer', 780);
+}
+
 function buildReadingQuestions() {
+  const qs = passages[currentPassage].questions;
   const container = document.getElementById('reading-questions');
   container.innerHTML = '';
-  readingQs.forEach((q, i) => {
+  qs.forEach((q, i) => {
     const div = document.createElement('div');
     div.className = 'question-item';
     div.innerHTML = `<p>${i+1}. ${q.q}</p><div class="options">${q.opts.map((o,j) => `<label id="rl-${i}-${j}"><input type="radio" name="rq${i}" value="${j}"> ${o}</label>`).join('')}</div>`;
@@ -823,8 +894,9 @@ function buildReadingQuestions() {
 }
 
 function checkReading() {
+  const qs = passages[currentPassage].questions;
   let score = 0;
-  readingQs.forEach((q, i) => {
+  qs.forEach((q, i) => {
     const chosen = document.querySelector(`input[name="rq${i}"]:checked`);
     q.opts.forEach((_,j) => {
       const lbl = document.getElementById(`rl-${i}-${j}`);
@@ -837,8 +909,8 @@ function checkReading() {
   const key = document.getElementById('answer-key');
   const content = document.getElementById('answer-key-content');
   key.classList.add('show');
-  content.innerHTML = `<strong>Score: ${score} / ${readingQs.length}</strong> &nbsp;·&nbsp; ` +
-    readingQs.map((q,i) => `Q${i+1}: <span style="color:var(--accent2)">${q.opts[q.ans]}</span>`).join(' &nbsp;|&nbsp; ');
+  content.innerHTML = `<strong>Score: ${score} / ${qs.length}</strong> &nbsp;·&nbsp; ` +
+    qs.map((q,i) => `Q${i+1}: <span style="color:var(--accent2)">${q.opts[q.ans]}</span>`).join(' &nbsp;|&nbsp; ');
 }
 
 function resetReading() {
@@ -853,7 +925,12 @@ const task1Prompts = [
   "The pie charts below show the proportion of household energy use by category in Australia in 2000 and 2020. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
   "The line graph below shows changes in the average price of petrol in four countries (the UK, Germany, the USA, and India) from 2005 to 2023. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
   "The diagram below shows the process of recycling plastic bottles. Summarise the information by selecting and reporting the main stages of the process.",
-  "The table below shows the percentage of people using the internet for different purposes in five countries in 2022. Summarise the information by selecting and reporting the main features, and make comparisons where relevant."
+  "The table below shows the percentage of people using the internet for different purposes in five countries in 2022. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+  "The two maps below show the layout of a university campus in 1990 and in the present day. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+  "The line graph below shows the percentage of the population in three age groups (under 15, 15–64, and over 65) in Japan from 1950 to 2050 (projected). Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+  "The bar chart below shows the average number of hours per week that people in six countries spend on unpaid domestic work, broken down by gender. Summarise the information by selecting and reporting the main features, and make comparisons where relevant.",
+  "The diagram below illustrates how solar panels generate and distribute electricity in a residential setting. Summarise the information by selecting and reporting the main features.",
+  "The table below compares the average monthly cost of living (housing, food, transport, and leisure) in five major cities: London, New York, Tokyo, Sydney, and Dubai. Summarise the information by selecting and reporting the main features, and make comparisons where relevant."
 ];
 
 const task2Prompts = [
@@ -863,7 +940,14 @@ const task2Prompts = [
   { type: "Two-part Question", q: "Many governments are investing in public transport as an alternative to private car use. Why do some people still choose to travel by car? What can governments do to encourage the use of public transport?" },
   { type: "Opinion", q: "The increasing globalisation of companies has had a negative effect on local cultures and traditions. To what extent do you agree or disagree with this statement?" },
   { type: "Agree/Disagree", q: "Children who grow up in poverty are disadvantaged throughout their lives. Agree or disagree?" },
-  { type: "Problem/Solution", q: "Obesity is an increasing problem in many countries. What are the causes of obesity? What measures could be taken to solve this problem?" }
+  { type: "Problem/Solution", q: "Obesity is an increasing problem in many countries. What are the causes of obesity? What measures could be taken to solve this problem?" },
+  { type: "Discuss Both Views", q: "Some people think that zoos play an important role in wildlife conservation. Others believe that keeping animals in captivity is cruel and unnecessary. Discuss both views and give your own opinion." },
+  { type: "Agree/Disagree", q: "Social media has done more harm than good to communication between people. To what extent do you agree or disagree?" },
+  { type: "Two-part Question", q: "Many young people today are leaving rural areas to live in cities. What are the reasons for this trend? What problems does it cause for both rural and urban areas?" },
+  { type: "Problem/Solution", q: "The gap between the rich and the poor is growing in many countries. What problems does this cause? What can be done to reduce inequality?" },
+  { type: "Agree/Disagree", q: "It is more important for schools to teach students how to collaborate than how to compete. To what extent do you agree or disagree?" },
+  { type: "Opinion", q: "Some people argue that the government should make it compulsory for citizens to vote in national elections. Others believe that voting should remain a personal choice. Discuss both views and give your own opinion." },
+  { type: "Two-part Question", q: "In many countries, people are living longer than ever before. What are the benefits and challenges of an ageing population for society?" }
 ];
 
 let t1idx = 0, t2idx = 0;
@@ -905,6 +989,11 @@ const part1Topics = [
   { title: "Free Time", qs: ["What do you like to do in your free time?", "Have your hobbies changed since you were a child?", "Do you prefer spending time alone or with friends?"] },
   { title: "Food", qs: ["Do you enjoy cooking?", "What is your favourite type of food?", "Do you prefer eating at home or in restaurants?", "Has food in your country changed in recent years?"] },
   { title: "Travel", qs: ["Do you enjoy travelling?", "What kind of places do you like to visit?", "Have you ever visited another country?"] },
+  { title: "Music", qs: ["Do you enjoy listening to music?", "What kind of music do you prefer?", "Did you learn to play a musical instrument as a child?", "How important is music in your daily life?"] },
+  { title: "Reading", qs: ["Do you enjoy reading?", "What kinds of books or articles do you like to read?", "Do you prefer reading physical books or digital ones?", "Do you think reading habits have changed in your country?"] },
+  { title: "Weather", qs: ["What kind of weather do you prefer?", "How does the weather affect your mood?", "Has the weather in your country changed in recent years?", "Do you check the weather forecast regularly?"] },
+  { title: "Shopping", qs: ["Do you enjoy shopping?", "Do you prefer shopping online or in stores?", "How often do you go shopping for things other than food?", "Has the way people shop changed in your country?"] },
+  { title: "Nature", qs: ["Do you spend time in nature?", "What is your favourite natural environment — forests, beaches, mountains?", "Do you think people in your country appreciate nature enough?", "How has nature in your country changed during your lifetime?"] },
 ];
 
 const part2Topics = [
@@ -912,12 +1001,19 @@ const part2Topics = [
   { title: "Describe a person who has influenced you", cue: "<strong>You should say:</strong><ul><li>who this person is</li><li>how you know them</li><li>what qualities they have</li></ul><strong>and explain how they have influenced you.</strong><br><br><em>Tip: Be specific — give an example of something they said or did.</em>" },
   { title: "Describe a skill you would like to learn", cue: "<strong>You should say:</strong><ul><li>what the skill is</li><li>why you want to learn it</li><li>how you would go about learning it</li></ul><strong>and explain how learning this skill would benefit you.</strong>" },
   { title: "Describe a book or film that had a big impact on you", cue: "<strong>You should say:</strong><ul><li>what the book/film was about</li><li>when you read/watched it</li><li>what you particularly liked about it</li></ul><strong>and explain what impact it had on you.</strong>" },
+  { title: "Describe a place you visited that you found particularly interesting", cue: "<strong>You should say:</strong><ul><li>where the place was</li><li>when you went there</li><li>what you saw and did</li></ul><strong>and explain why you found it particularly interesting.</strong><br><br><em>Tip: Describe sensory details — sights, sounds, atmosphere — to make your answer vivid.</em>" },
+  { title: "Describe an achievement you are proud of", cue: "<strong>You should say:</strong><ul><li>what you achieved</li><li>how long it took</li><li>what difficulties you overcame</li></ul><strong>and explain why you feel proud of this achievement.</strong><br><br><em>Tip: Structure as a mini-story with a challenge, your actions, and the outcome.</em>" },
+  { title: "Describe a time when you helped someone", cue: "<strong>You should say:</strong><ul><li>who you helped</li><li>what the situation was</li><li>how you helped them</li></ul><strong>and explain how you felt about helping this person.</strong>" },
+  { title: "Describe a technology you use regularly that you find useful", cue: "<strong>You should say:</strong><ul><li>what the technology is</li><li>how long you have been using it</li><li>how it works or what it does</li></ul><strong>and explain why you find it particularly useful.</strong><br><br><em>Tip: Contrast life with and without it to show its value.</em>" },
 ];
 
 const part3Topics = [
-  { title: "Travel & Tourism", qs: ["How has tourism changed your country?", "What are the advantages and disadvantages of mass tourism?", "Do you think it is important to travel internationally? Why?"] },
-  { title: "Education & Learning", qs: ["How has technology changed the way people learn?", "Should education focus more on practical skills?", "Why do some adults choose to continue their education later in life?"] },
-  { title: "Technology & Society", qs: ["In what ways has technology changed social interaction?", "Do the benefits of social media outweigh the disadvantages?", "How might technology change the workplace in the next 20 years?"] },
+  { title: "Travel & Tourism", qs: ["How has tourism changed your country?", "What are the advantages and disadvantages of mass tourism?", "Do you think it is important to travel internationally? Why?", "Should governments limit tourism in environmentally sensitive areas?"] },
+  { title: "Education & Learning", qs: ["How has technology changed the way people learn?", "Should education focus more on practical skills?", "Why do some adults choose to continue their education later in life?", "Is a university degree still as valuable as it used to be?"] },
+  { title: "Technology & Society", qs: ["In what ways has technology changed social interaction?", "Do the benefits of social media outweigh the disadvantages?", "How might technology change the workplace in the next 20 years?", "Should there be more regulation of social media companies?"] },
+  { title: "Environment & Climate", qs: ["Who should be responsible for protecting the environment — governments, companies, or individuals?", "Do you think people today are more or less environmentally aware than previous generations?", "How effective are international agreements on climate change?", "What lifestyle changes would have the biggest impact on the environment?"] },
+  { title: "Work & Careers", qs: ["How have attitudes towards work changed in recent decades?", "Do you think working from home will become the norm in the future?", "What is more important in a career — job satisfaction or a high salary?", "How can governments help people who lose their jobs due to automation?"] },
+  { title: "Health & Wellbeing", qs: ["Why do you think rates of mental health problems are increasing in many countries?", "To what extent should governments be responsible for the health of their citizens?", "Do you think people place too much importance on physical appearance?", "How can communities be designed to encourage healthier lifestyles?"] },
 ];
 
 function buildSpeaking() {
@@ -991,6 +1087,36 @@ const vocabData = {
     { w:"inflation", pos:"n.", def:"A general increase in prices and fall in purchasing power.", ex:"High inflation erodes household savings." },
     { w:"entrepreneur", pos:"n.", def:"A person who sets up a business, taking on financial risk.", ex:"Entrepreneurs drive innovation in a market economy." },
   ],
+  "Education": [
+    { w:"curriculum", pos:"n.", def:"The subjects comprising a course of study in a school or university.", ex:"The new curriculum places greater emphasis on critical thinking." },
+    { w:"pedagogy", pos:"n.", def:"The method and practice of teaching.", ex:"Modern pedagogy increasingly incorporates technology in the classroom." },
+    { w:"literacy", pos:"n.", def:"The ability to read and write; competence in a specific area.", ex:"Digital literacy is now considered an essential life skill." },
+    { w:"attainment", pos:"n.", def:"The action of achieving a goal or level, especially in education.", ex:"There is a significant attainment gap between different socioeconomic groups." },
+    { w:"compulsory", pos:"adj.", def:"Required by law or rules; obligatory.", ex:"Education is compulsory in most countries up to the age of 16." },
+    { w:"vocational", pos:"adj.", def:"Relating to an occupation or employment; practical and job-specific.", ex:"Vocational training provides skills directly applicable to specific industries." },
+    { w:"scholarship", pos:"n.", def:"A grant or payment to support a student's education.", ex:"She received a full scholarship to study at Oxford." },
+    { w:"cognitive", pos:"adj.", def:"Relating to mental processes of acquiring knowledge and understanding.", ex:"Cognitive development in early childhood is strongly influenced by environment." },
+  ],
+  "Culture": [
+    { w:"heritage", pos:"n.", def:"Features belonging to the culture of a particular society.", ex:"The city's architectural heritage attracts millions of tourists annually." },
+    { w:"assimilation", pos:"n.", def:"The process of becoming part of a different culture or group.", ex:"Assimilation into a new culture can be both rewarding and challenging." },
+    { w:"indigenous", pos:"adj.", def:"Originating or occurring naturally in a particular place.", ex:"Indigenous languages are disappearing at an alarming rate worldwide." },
+    { w:"pluralism", pos:"n.", def:"A condition where multiple cultural or ethnic groups coexist.", ex:"Urban pluralism enriches cities with diverse perspectives and traditions." },
+    { w:"stereotype", pos:"n.", def:"A fixed, oversimplified image of a type of person or thing.", ex:"Stereotypes in media can reinforce harmful social prejudices." },
+    { w:"acculturation", pos:"n.", def:"The process of adopting characteristics of another culture.", ex:"Acculturation involves exchanging cultural elements between communities." },
+    { w:"artefact", pos:"n.", def:"An object made by a human being, typically of historical interest.", ex:"The museum houses thousands of artefacts from ancient civilisations." },
+    { w:"cosmopolitan", pos:"adj.", def:"Familiar with and at ease in many different cultures.", ex:"New York is one of the world's most cosmopolitan cities." },
+  ],
+  "Science": [
+    { w:"hypothesis", pos:"n.", def:"A proposed explanation made on the basis of limited evidence.", ex:"The scientists tested their hypothesis through a series of controlled experiments." },
+    { w:"empirical", pos:"adj.", def:"Based on observation or experience rather than theory or pure logic.", ex:"Empirical evidence is essential to validating scientific claims." },
+    { w:"genome", pos:"n.", def:"The complete set of genes or genetic material in an organism.", ex:"Mapping the human genome has revolutionised medical research." },
+    { w:"catalyst", pos:"n.", def:"A substance that increases the rate of a reaction; a person or thing that causes change.", ex:"The discovery acted as a catalyst for further research in the field." },
+    { w:"quantum", pos:"adj./n.", def:"The smallest discrete quantity of a physical property.", ex:"Quantum computing may solve problems impossible for classical computers." },
+    { w:"biodegradable", pos:"adj.", def:"Capable of being decomposed by bacteria or other living organisms.", ex:"Replacing plastics with biodegradable materials is a key environmental goal." },
+    { w:"nanotechnology", pos:"n.", def:"The manipulation of matter on an atomic or molecular scale.", ex:"Nanotechnology has potential applications in medicine and materials science." },
+    { w:"taxonomy", pos:"n.", def:"The branch of science concerned with classification of organisms.", ex:"The taxonomy of recently discovered species is still being established." },
+  ],
 };
 
 function buildVocab() {
@@ -1033,6 +1159,11 @@ const grammarErrors = [
   { title: "Overuse of 'also'", wrong: "Technology has also changed education. It has also affected healthcare. It has also impacted the economy.", right: "Technology has transformed education. Furthermore, it has reshaped healthcare. Its impact on the economy is equally significant.", exp: "Starting consecutive sentences with 'also' is a sign of limited cohesion. Use a variety of discourse markers: Furthermore, Moreover, In addition, Equally, Similarly, By the same token." },
   { title: "Because vs. Because of", wrong: "The pollution increased because of people drive more cars.", right: "The pollution increased because people drive more cars. / The pollution increased because of increased car use.", exp: "'Because' is followed by a clause (subject + verb). 'Because of' is followed by a noun phrase. Confusing these is a very common error." },
   { title: "Passive voice overuse", wrong: "It is believed by many people that it is considered by experts that technology is used by young people.", right: "Many people believe that technology dominates young people's lives.", exp: "The passive is useful for formality, but overuse creates unclear, wordy prose. Use active voice as the default; switch to passive only when the agent is unknown, unimportant, or deliberately backgrounded." },
+  { title: "Incorrect use of 'despite' and 'although'", wrong: "Despite the government has invested heavily in healthcare, outcomes remain poor.", right: "Despite heavy government investment in healthcare, outcomes remain poor. / Although the government has invested heavily in healthcare, outcomes remain poor.", exp: "'Despite' and 'in spite of' are prepositions — they must be followed by a noun or gerund, not a clause. 'Although' and 'even though' are conjunctions — they connect two clauses and must be followed by a subject + verb." },
+  { title: "Dangling modifiers", wrong: "Having studied the data carefully, the results were surprising.", right: "Having studied the data carefully, the researchers found the results surprising.", exp: "A participial phrase at the start of a sentence must refer to the subject of the main clause. In the wrong example, 'the results' cannot study data. Fix by ensuring the subject of the main clause performs the action in the modifier." },
+  { title: "Confusing 'affect' and 'effect'", wrong: "Pollution effects the health of urban residents. The affect was severe.", right: "Pollution affects the health of urban residents. The effect was severe.", exp: "'Affect' is almost always a verb meaning 'to have an impact on'. 'Effect' is almost always a noun meaning 'a result or outcome'. Exceptions exist but are rare — in IELTS writing, follow this rule consistently." },
+  { title: "Run-on sentences (comma splices)", wrong: "Many people migrate to cities, there are better job opportunities there.", right: "Many people migrate to cities because there are better job opportunities there. / Many people migrate to cities. There are better job opportunities there.", exp: "You cannot join two independent clauses with only a comma. Use a subordinating conjunction (because, although, while), a coordinating conjunction (and, but, so) with a comma, a semicolon, or simply start a new sentence." },
+  { title: "Overusing 'due to'", wrong: "Due to the lack of clean water, people are dying. Due to climate change, crops are failing. Due to poor governance, poverty is increasing.", right: "Owing to a lack of clean water, people are dying. As a result of climate change, crops are failing. Poor governance has contributed to widespread poverty.", exp: "'Due to' is acceptable but becomes monotonous when repeated. Vary with: owing to, as a result of, because of, on account of, stemming from. Also, 'due to' traditionally follows a noun — use 'because of' after a verb (e.g., 'failed because of poor planning')." },
 ];
 
 function buildGrammar() {
@@ -1052,7 +1183,8 @@ function buildGrammar() {
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 loadBands();
 loadChecks();
-buildReadingQuestions();
+buildPassageSelector();
+switchPassage(0);
 buildSpeaking();
 buildVocab();
 buildGrammar();
