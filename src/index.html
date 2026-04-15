@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuralFlow — Intelligence, Amplified</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <div class="nav-logo">NeuralFlow</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero">
+      <div>
+        <h1>NeuralFlow</h1>
+        <p>Intelligence, Amplified</p>
+        <button class="btn-primary">Get Started Free</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section id="features">
+    <div class="container">
+      <h2>Everything you need to scale AI</h2>
+      <p class="section-subtitle">Powerful tools built for teams who move fast.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Neural Processing</h3>
+          <p>Real-time neural network inference at scale. Deploy models with sub-millisecond latency.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Real-time Analytics</h3>
+          <p>Live dashboards powered by streaming data pipelines. Visualize insights as they happen.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>Adaptive Learning</h3>
+          <p>Models that improve continuously from user feedback. Zero manual retraining required.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing">
+    <div class="container">
+      <h2>Simple, transparent pricing</h2>
+      <p class="section-subtitle">Start free. Scale as you grow. No surprises.</p>
+      <div class="pricing-grid">
+
+        <!-- Starter -->
+        <div class="pricing-card">
+          <div class="tier-name">Starter</div>
+          <div class="price">$0</div>
+          <div class="price-period">per month</div>
+          <ul class="features-list">
+            <li>5 API calls/day</li>
+            <li>Basic analytics</li>
+            <li>Community support</li>
+          </ul>
+          <button class="btn-primary">Get Started</button>
+        </div>
+
+        <!-- Pro -->
+        <div class="pricing-card pricing-card--featured">
+          <div class="badge">Most Popular</div>
+          <div class="tier-name">Pro</div>
+          <div class="price">$49</div>
+          <div class="price-period">per month</div>
+          <ul class="features-list">
+            <li>10,000 API calls/day</li>
+            <li>Advanced analytics</li>
+            <li>Priority support</li>
+            <li>Custom models</li>
+            <li>Team access</li>
+            <li>Export tools</li>
+          </ul>
+          <button class="btn-primary">Start Free Trial</button>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="pricing-card">
+          <div class="tier-name">Enterprise</div>
+          <div class="price">Custom</div>
+          <div class="price-period">contact us for pricing</div>
+          <ul class="features-list">
+            <li>Unlimited API calls</li>
+            <li>Dedicated infrastructure</li>
+            <li>SLA guarantee</li>
+            <li>Custom integrations</li>
+            <li>24/7 support</li>
+            <li>On-premise option</li>
+          </ul>
+          <button class="btn-primary">Contact Sales</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <h2>Get in touch</h2>
+      <p class="section-subtitle">Have questions? We'd love to hear from you.</p>
+      <form id="contact-form" class="contact-form">
+        <input id="name" type="text" placeholder="Your Name" required>
+        <input id="email" type="email" placeholder="Your Email" required>
+        <textarea id="message" rows="5" placeholder="Your Message" required></textarea>
+        <button type="submit" class="btn-primary">Send Message</button>
+        <div id="form-status"></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 NeuralFlow. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+      const statusDiv = document.getElementById('form-status');
+      try {
+        const res = await fetch('http://localhost:3000/api/contact', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, message })
+        });
+        const data = await res.json();
+        statusDiv.textContent = data.message || data.error;
+        statusDiv.style.color = res.ok ? '#6c63ff' : '#ff6b6b';
+      } catch (err) {
+        statusDiv.textContent = 'Could not reach server. Is it running?';
+        statusDiv.style.color = '#ff6b6b';
+      }
+    });
+  </script>
+
+</body>
+</html>
