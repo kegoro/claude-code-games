@@ -1,0 +1,110 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "quant-backtest"
+version = "0.1.0"
+description = "GA 進化與現貨回測引擎 (BTCUSDT, 1m base clock)"
+readme = "README_quant.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26",
+  "pandas>=2.2",
+  "pyarrow>=15.0",
+  "scipy>=1.12",
+  "numba>=0.59",
+  "ccxt>=4.2",
+  "requests>=2.32",
+  "streamlit>=1.32",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov>=4.1",
+  "hypothesis>=6.98",
+  "ruff>=0.3",
+  "black>=24.3",
+  "mypy>=1.9",
+  "bandit>=1.7",
+  "pre-commit>=3.6",
+  "pandas-stubs",
+  "types-requests",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "genome*",
+  "environment*",
+  "season*",
+  "backtest*",
+  "strategy*",
+  "fitness*",
+  "ga*",
+  "crucible*",
+  "archive*",
+  "data*",
+  "ui*",
+]
+exclude = ["_legacy*", "tests*"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+exclude = ["_legacy", "data/cache", "data/specs"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["N802", "N803"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+exclude = "(_legacy|data/cache|data/specs|tests)"
+
+[[tool.mypy.overrides]]
+module = [
+  "ccxt",
+  "numba",
+  "streamlit",
+  "scipy.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = [
+  "unit: fast isolated tests",
+  "integration: multi-module pipeline tests",
+  "property: hypothesis-based property tests",
+]
+addopts = "-q --strict-markers"
+
+[tool.coverage.run]
+source = ["."]
+omit = [
+  "tests/*",
+  "_legacy/*",
+  "ui/*",
+  "**/__init__.py",
+]
+
+[tool.coverage.report]
+fail_under = 80
+show_missing = true
+skip_covered = false
+
+[tool.bandit]
+exclude_dirs = ["tests", "_legacy", "data/cache"]

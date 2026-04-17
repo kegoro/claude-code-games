@@ -1,0 +1,33 @@
+# 資料快取（Binance Vision 1m Parquet 與 Exchange specs 本地快照）
+data/cache/
+data/specs/*.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# 測試/分析
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# Archive SQLite
+archive/*.db
+archive/*.sqlite
+archive/*.sqlite3
+
+# Streamlit
+.streamlit/secrets.toml
+
+# 編輯器
+.idea/
+*.swp
+*.swo
